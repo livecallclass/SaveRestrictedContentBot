@@ -26,14 +26,14 @@ ft = f"To use this bot you've to join @{fs}."
 
 batch = []
 
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/cancel'))
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/stop'))
 async def cancel(event):
     if not event.sender_id in batch:
         return await event.reply("No batch active.")
     batch.clear()
     await event.reply("Done.")
     
-@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/batch'))
+@Drone.on(events.NewMessage(incoming=True, from_users=AUTH, pattern='/bulk'))
 async def _batch(event):
     if not event.is_private:
         return
@@ -66,7 +66,7 @@ async def _batch(event):
                 return conv.cancel()
             try:
                 value = int(_range.text)
-                if value > 100:
+                if value > 100000:
                     await conv.send_message("You can only get upto 100 files in a single batch.")
                     return conv.cancel()
             except ValueError:
@@ -79,15 +79,15 @@ async def _batch(event):
 
 async def run_batch(userbot, client, sender, link, _range):
     for i in range(_range):
-        timer = 60
-        if i < 25:
+        timer = 10
+        if i < 5:
             timer = 5
-        if i < 50 and i > 25:
+        if i < 5 and i > 5:
             timer = 10
-        if i < 100 and i > 50:
-            timer = 15
+        if i < 10 and i > 5:
+            timer = 5
         if not 't.me/c/' in link:
-            if i < 25:
+            if i < 5:
                 timer = 2
             else:
                 timer = 3
